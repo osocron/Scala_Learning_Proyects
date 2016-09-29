@@ -1,3 +1,3 @@
-# Scala_Learning_Proyects
+# Scala Learning Proyects
 
 This repo holds proyects that I've written in my path to learn Scala.
