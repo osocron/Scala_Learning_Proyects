@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /titus                      controllers.Application.titus
+GET     /starbuzz                   controllers.Application.starbuzzIndex
+GET     /mission                    controllers.Application.starbuzzMission
+GET     /lounge                     controllers.Application.lounge
+GET     /beverages/elixir           controllers.Application.elixir
+GET     /about/directions           controllers.Application.directions
+GET     /journal                    controllers.Application.journal
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+    

@@ -1,0 +1,51 @@
+@(title: String, nombres: List[String])
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/mui.min.css")">
+    <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    <style>
+        h4 { padding: .5em;}
+        h4.highlighted { background: #666666;}
+    </style>
+</head>
+<body>
+    <h1>The great warriors</h1>
+    <h2 id="caldmorLabel">Of old caldmor</h2>
+    <ul>
+        <script>
+            var i = 0;
+        </script>
+        @for(littleTitus <- nombres){
+            <script>
+                i = i+1;
+                document.write("<h4 class='javascript'>This be javascript: "+i+"\n</h4>");
+            </script>
+            <li>@littleTitus</li>
+        }
+    </ul>
+    <p><a href="/" id="go_back">go back from whence you came!</a></p>
+    <script>
+        $(document).ready(function() {
+            $(".javascript").click(function(){
+                var text = $(".javascript").text();
+                alert("You clicked me!\n"+"I am: \n"+text+"what is wrong with ya!");
+            })
+            $("#go_back").click(function(event){
+                event.preventDefault();
+                window.open(this.href);
+            })
+            $(function(){
+                $("h4").mouseenter(function(){
+                    $(this).addClass("highlighted");
+                })
+                $("h4").mouseleave(function(){
+                    $(this).removeClass("highlighted");
+                })
+            })
+        })
+    </script>
+</body>
+</html>
