@@ -22,6 +22,4 @@ class FunPlay$Test extends FunSuite {
     }
   }
 
-
-
 }
