@@ -13,11 +13,17 @@ object FunPlay {
 
 }
 
-trait ValidType[+A]
-case object InvalidS extends ValidType[String]
-class StringN(val s: String)(implicit val n: Int) extends ValidType[String]
-object StringN {
-  def apply(s: String)(implicit n: Int): ValidType[String] =
-    if (s.length == n) new StringN(s)(n) else InvalidS
-  def unapply(arg: StringN): Option[String] = Some(arg.s)
+trait ValidType[+A] {
+  def map[B](f: A => B): ValidType[B] = this match {
+    case LengthN(v) => LengthN(f(v))
+  }
+}
+case object InvalidL extends ValidType[Nothing]
+class LengthN[A](val v: A)
+                 (implicit val n: Int,
+                  val p: (A, Int) => Boolean) extends ValidType[A]
+object LengthN {
+  def apply[A](v: A)(implicit n: Int, p: (A, Int) => Boolean): ValidType[A] =
+    if (p(v, n)) new LengthN(v)(n, p) else InvalidL
+  def unapply[A](arg: LengthN[A]): Option[A] = Some(arg.v)
 }

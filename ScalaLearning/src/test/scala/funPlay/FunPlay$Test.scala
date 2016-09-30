@@ -8,8 +8,9 @@ import org.scalatest.FunSuite
 class FunPlay$Test extends FunSuite {
 
   implicit val stringN = 5
+  implicit val pLength = (s: String, n: Int) => s.length == n
 
-  val wString = StringN("12345")
+  val wString = LengthN("12345")
 
   test("application should return true") {
     assert(FunPlay.application("12345"))
@@ -17,8 +18,8 @@ class FunPlay$Test extends FunSuite {
 
   test("wString should be a StringN") {
     wString match {
-      case StringN(s) => assert(s == "12345")
-      case InvalidS => assert(wString.isInstanceOf[InvalidS.type])
+      case LengthN(s) => assert(s == "12345")
+      case InvalidL => assert(wString.isInstanceOf[InvalidL.type])
     }
   }
 
