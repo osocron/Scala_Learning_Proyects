@@ -13,9 +13,6 @@ class FunPlay$Test extends FunSuite {
 
   val wString = LengthN("12345")
 
-  test("application should return true") {
-    assert(FunPlay.application("12345"))
-  }
 
   test("wString should be a StringN") {
     wString match {

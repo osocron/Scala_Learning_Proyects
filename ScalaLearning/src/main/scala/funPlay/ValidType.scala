@@ -3,15 +3,6 @@ package funPlay
 /**
   * Created by osocron on 9/28/16.
   */
-object FunPlay {
-
-  implicit val n: Int = 0
-
-  type lNString = (String, Int) => Boolean
-
-  def application(s: String)(implicit n: Int): Boolean = s.length == n
-
-}
 
 trait ValidType[+A] {
 
@@ -21,16 +12,17 @@ trait ValidType[+A] {
     case InvalidL => InvalidL
   }
 
-  def flatMap[B](f: A => ValidType[B])
-                (implicit n: Int,
-                 p: (ValidType[B], Int) => Boolean): ValidType[B] =
-    map(f) getOrElse InvalidL
-
   def getOrElse[B >: A](default: => B)(implicit n: Int,
                                        p: (B, Int) => Boolean): B = this match {
     case LengthN(v) => v
     case InvalidL => default
   }
+
+  def flatMap[B](f: A => ValidType[B])
+                (implicit n: Int,
+                 p: (ValidType[B], Int) => Boolean): ValidType[B] =
+    map(f) getOrElse InvalidL
+
 
 }
 

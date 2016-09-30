@@ -50,6 +50,16 @@ object Tree {
     case Branch(l, r) => foreach(l)(f); foreach(r)(f)
   }
 
+  /**
+    * Good ol' map that applies a function to each element of the tree.
+    *
+    * @param t  The tree
+    * @param f  The function
+    * @tparam A The type parameter of the original tree.
+    * @tparam B The type parameter for the resulting tree.
+    * @return   A tree of type B after applying a function to each
+    *           element of the tree.
+    */
   def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
     case Leaf(v) => Leaf(f(v))
     case Branch(l, r) => Branch(map(l)(f), map(r)(f))
@@ -69,51 +79,34 @@ object Tree {
       *
       * @param t  The tree.
       * @param d  The depth level on each recursive call.
-      * @param m  The maximum of the depth levels found.
-      * @return   m, the deepest pit.
+      * @return   The deepest pit.
       */
-    def loop(t: Tree[A], d: Int, m: Int): Int = t match {
-      case Leaf(v) => if (d > m) d else m
-      case Branch(l, r) => loop(l, d + 1, m); loop(l, d + 1, m)
+    def loop(t: Tree[A], d: Int): Int = t match {
+      case Leaf(v) => d
+      case Branch(l, r) => {
+        val left  = loop(l, d + 1)
+        val right = loop(r, d + 1)
+        if (left > right) left else right
+      }
     }
 
-    loop(t, 0, 0)
+    loop(t, 0)
 
   }
 
+  /**
+    * Folds over the tree creating mighty deforestation.
+    *
+    * @param t  The tree to be destroyed.
+    * @param z  The accumulator.
+    * @param f  The function of destruction.
+    * @tparam A The type parameter of the tree.
+    * @tparam B The type parameter of the resulting destruction.
+    * @return   A barren land with only one value left.
+    */
   def fold[A, B](t: Tree[A], z: B)(f: (A, B) => B): B = t match {
     case Leaf(v) => f(v, z)
     case Branch(l, r) => fold(l,fold(r, z)(f))(f)
   }
-
-}
-
-object test2 extends App {
-
-  import Tree._
-
-  val t = Branch(
-    Branch(
-      Leaf(1),
-      Leaf(2)
-    ),
-    Branch(
-      Leaf(3),
-      Branch(
-        Leaf(4),
-        Leaf(5)
-      )
-    )
-  )
-
-  val r1 = size(t)
-  val r2 = maximum(t)
-  val r3 = depth(t)
-  val r4 = map(t)(_.toString)
-  val r5 = fold(t, 0)((x, y) => x + y)
-
-  //foreach(r4)(println)
-
-  println(r3)
 
 }
