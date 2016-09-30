@@ -9,6 +9,7 @@ class FunPlay$Test extends FunSuite {
 
   implicit val stringN = 5
   implicit val pLength = (s: String, n: Int) => s.length == n
+  implicit val intLength = (a: Int, b: Int) => a.toString.length == b
 
   val wString = LengthN("12345")
 
@@ -21,6 +22,10 @@ class FunPlay$Test extends FunSuite {
       case LengthN(s) => assert(s == "12345")
       case InvalidL => assert(wString.isInstanceOf[InvalidL.type])
     }
+  }
+
+  test("mapping a LengthN to an int should work") {
+    assert(wString.map(_.toInt).getOrElse(5) == 12345)
   }
 
 }
