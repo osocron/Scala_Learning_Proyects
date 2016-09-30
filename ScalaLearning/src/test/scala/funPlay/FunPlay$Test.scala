@@ -18,7 +18,7 @@ class FunPlay$Test extends FunSuite {
   test("wString should be a StringN") {
     wString match {
       case StringN(s) => assert(s == "12345")
-      case InvalidS => assert(stringN == InvalidS)
+      case InvalidS => assert(wString.isInstanceOf[InvalidS.type])
     }
   }
 
