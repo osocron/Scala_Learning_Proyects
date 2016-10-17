@@ -40,3 +40,22 @@ object LengthN {
   def unapply[A](arg: LengthN[A]): Option[A] = Some(arg.v)
 
 }
+
+trait ConstrainedType[+A, +B]
+
+case object Invalid extends ConstrainedType[Nothing, Nothing]
+
+class Constrained[A, B](val v: A)
+                       (implicit val contraintValue: B,
+                        val p: (A, B) => Boolean) extends ConstrainedType[A, B]
+
+object Constrained {
+
+  def apply[A, B](v: A)
+                 (implicit constraintValue: B,
+                  p: (A, B) => Boolean): ConstrainedType[A, B] =
+    if (p(v, constraintValue)) new Constrained[A, B](v) else Invalid
+
+  def unapply[A, B](arg: Constrained[A, B]): Option[A] = Some(arg.v)
+
+}

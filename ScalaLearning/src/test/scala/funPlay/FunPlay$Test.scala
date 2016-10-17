@@ -25,4 +25,15 @@ class FunPlay$Test extends FunSuite {
     assert(wString.map(_.toInt).getOrElse(5) == 12345)
   }
 
+  val oString = Constrained[String, Int]("Hello!")
+
+  test("oString should be a Constrained") {
+    oString match {
+      case Constrained(s) => assert(s == "12345")
+      case Invalid => assert(oString.isInstanceOf[Invalid.type])
+    }
+  }
+
+
+
 }
