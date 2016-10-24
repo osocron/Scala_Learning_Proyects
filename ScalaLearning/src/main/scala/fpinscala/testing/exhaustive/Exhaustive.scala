@@ -1,7 +1,6 @@
 package fpinscala.testing.exhaustive
 
-import language.implicitConversions
-import language.postfixOps
+import scala.language.{implicitConversions, postfixOps}
 
 /*
 This source file contains the answers to the last two exercises in the section
@@ -10,14 +9,15 @@ This source file contains the answers to the last two exercises in the section
 The Gen data type in this file incorporates exhaustive checking of finite domains.
 */
 
-import fpinscala.laziness.{Stream,Cons,Empty}
-import fpinscala.state._
-import fpinscala.parallelism._
+import java.util.concurrent.{ExecutorService, Executors}
+
+import fpinscala.laziness.{Cons, Stream}
 import fpinscala.parallelism.Par.Par
-import Gen._
-import Prop._
-import Status._
-import java.util.concurrent.{Executors,ExecutorService}
+import fpinscala.parallelism._
+import fpinscala.state._
+import fpinscala.testing.exhaustive.Gen._
+import fpinscala.testing.exhaustive.Prop._
+import fpinscala.testing.exhaustive.Status._
 
 
 case class Prop(run: (MaxSize,TestCases,RNG) => Result) {

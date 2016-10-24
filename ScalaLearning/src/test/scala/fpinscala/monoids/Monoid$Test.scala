@@ -37,15 +37,21 @@ class Monoid$Test extends FunSuite {
   }
 
   test("testStringMonoid") {
-
+    assert(
+      stringMonoid.op("Hello", " world") == "Hello world"
+    )
   }
 
   test("testBooleanAnd") {
-
+    assert(
+      booleanAnd.op(true, true)
+    )
   }
 
   test("testIntMultiplication") {
-
+    assert(
+      intMultiplication.op(2, 4) == 8
+    )
   }
 
 }

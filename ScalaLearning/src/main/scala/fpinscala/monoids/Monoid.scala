@@ -40,4 +40,6 @@ object Monoid {
     override def zero: Boolean = true
   }
 
+
+
 }
