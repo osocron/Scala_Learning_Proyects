@@ -54,4 +54,32 @@ class Monoid$Test extends FunSuite {
     )
   }
 
+  test("Monoids work great with Lists and foldLeft") {
+    val words = List("Th", "is", " i", "s a", " mo", "no", "id")
+    assert(words.foldRight(stringMonoid.zero)(stringMonoid.op) ==
+      "This is a monoid")
+  }
+
+  test("Monoids follow the associativity laws") {
+    val words = List("Th", "is", " i", "s a", " mo", "no", "id")
+    assert(words.foldRight(stringMonoid.zero)(stringMonoid.op) ==
+      words.foldLeft(stringMonoid.zero)(stringMonoid.op))
+  }
+
+  test("Modified version of String Monoid inserts space between" +
+    "words") {
+    val words = List("Hello", "Scala!")
+    assert(words.fold(trimMonoid.zero)(trimMonoid.op)
+      == "Hello Scala!")
+  }
+
+  test("concatenate should sum 1, 2, 3, 4, 5") {
+    assert(concatenate(List(1, 2, 3, 4, 5), intAddition) == 15)
+  }
+
+  test("foldMap over a List of string numbers should return the sum") {
+    assert(foldMap(List("1", "2", "3", "4", "5"),
+      intAddition)(_.toInt) == 15)
+  }
+
 }
