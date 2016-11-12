@@ -38,15 +38,6 @@ class StreamTest extends FunSuite {
     assert(stream.filter(_ < 4).toList == List(1,2,3))
   }
 
-  test("for comprehensions should work with streams") {
-    val commons = for {
-      a <- stream
-      b <- Stream(1,3,6,8,11)
-      if a == b
-    } yield a
-    assert(commons.toList == List(1,3,6))
-  }
-
   test("append should work") {
     assert(stream.append(Stream(7)).toList == List(1,2,3,4,5,6,7))
   }
