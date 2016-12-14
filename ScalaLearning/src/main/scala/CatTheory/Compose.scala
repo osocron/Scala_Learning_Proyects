@@ -1,5 +1,7 @@
 package CatTheory
 
+import cats.Functor
+
 import scalaz.Monoid
 
 /**
@@ -21,8 +23,13 @@ object Compose {
 
 }
 
-trait Product
-case class Left[A](a: A) extends Product
-case class Right[A](a: A) extends Product
+import cats.syntax.either._
+
+final case class Coproduct[F[_], G[_], A](run: Either[F[A], G[A]]) {
+
+  def map[B](f: A => B)(implicit F: Functor[F], G: Functor[G]): Coproduct[F, G, B] =
+    Coproduct(run.bimap(F.lift(f), G.lift(f)))
+
+}
 
 
