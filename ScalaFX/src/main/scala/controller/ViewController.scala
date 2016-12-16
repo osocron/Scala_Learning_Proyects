@@ -16,11 +16,22 @@ class ViewController extends Application {
   @FXML
   var clickMeButton: JFXButton = _
 
-  override def start(primaryStage: Stage): Unit = println("Scala rocks!")
+  @FXML
+  var btnMystery: JFXButton = _
 
-  def onClick() = clickMeButton.getText match {
-    case "Click Me" => clickMeButton.setText("Don't click me!"); clickMeButton.setRipplerFill(Color.Green)
-    case _ => clickMeButton.setText("Click Me"); clickMeButton.setRipplerFill(Color.Red)
+  override def start(primaryStage: Stage): Unit = {}
+
+  def onClick(): Unit = clickMeButton.getText match {
+    case "Click Me" => {
+      clickMeButton.setText("Don't click me!")
+      clickMeButton.setRipplerFill(Color.Chartreuse)
+    }
+    case _ => clickMeButton.setText("Click Me"); clickMeButton.setRipplerFill(Color.Crimson)
+  }
+
+  def doMysteryAction(): Unit = {
+    val stage: Stage = btnMystery.getScene.getWindow.asInstanceOf[Stage]
+    stage.close()
   }
 
 }

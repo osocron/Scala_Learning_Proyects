@@ -30,6 +30,11 @@ object ComposotionProof  extends Properties("Composition") {
     (f: A => B, g: B => C, a: A) => compose(f, g)(a) == g(f(a))
   }
 
+  property("function composition should be associative") = forAll {
+    (f: A => B, g: B => C, h: C => D, a: A) =>
+      compose(compose(f, g), h)(a) == compose(f, compose(g, h))(a)
+  }
+
   //This is just awesome. Proving map in coproducts is just cool
   property("fun with Coproducts") = forAll {
     (la: List[A], f: A => B) => Coproduct(Right(la)).map(f).run match {
