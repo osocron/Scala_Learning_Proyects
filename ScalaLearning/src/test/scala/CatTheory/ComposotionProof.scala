@@ -3,7 +3,8 @@ package CatTheory
 import CatTheory.Categories._
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
-import cats.implicits._
+import cats._, cats.instances.all._
+import cats.syntax.eq._
 
 /**
   * Created by osocron on 13/12/16.
@@ -40,6 +41,11 @@ object ComposotionProof  extends Properties("Composition") {
     (la: List[A], f: A => B) => Coproduct(Right(la)).map(f).run match {
       case Right(v) => v.sum == la.map(f).sum
     }
+  }
+
+  //Prove that a functor preserves identity
+  property("functors preserve identity") = forAll {
+    (x: Either[String, Int]) => (x map identity) === x
   }
 
 }

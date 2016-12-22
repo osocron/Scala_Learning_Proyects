@@ -1,5 +1,7 @@
 package CatTheory
 
+import scala.language.higherKinds
+
 /**
   * Created by osocron on 24/10/16.
   */
