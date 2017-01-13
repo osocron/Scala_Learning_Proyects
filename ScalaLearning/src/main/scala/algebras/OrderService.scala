@@ -12,10 +12,10 @@ trait OrderService {
   type Response[A] = Future[A]
 
   def placeOrder[O  <: NormalOrder,
-                 C  <: Customer,
+                 C  <: OrderClient,
                  OS <: OrderStatus](order: O, custumer: C): Response[OS]
 
-  def placeExpressOrder[C   <: Customer,
+  def placeExpressOrder[C   <: OrderClient,
                         ExO <: ExpressOrder,
                         OS  <: OrderStatus](expressOrder: ExO, customer: C): Response[OS]
 
@@ -25,21 +25,21 @@ trait OrderService {
 
 sealed trait Order {
   def orderId: Long
-  def orderDescripction: String
+  def orderDescription: String
   def items: List[Item]
 }
 
 sealed case class NormalOrder(orderId: Long,
-                                         orderDescripction: String,
-                                         items: List[Item]) extends Order
+                              orderDescription: String,
+                              items: List[Item]) extends Order
 
 sealed case class ExpressOrder(orderId: Long,
-                                          orderDescripction: String,
-                                          expressTime: LocalDate,
-                                          items: List[Item]) extends Order
+                               orderDescription: String,
+                               expressTime: LocalDate,
+                               items: List[Item]) extends Order
 
 sealed trait Item
-sealed trait Customer
+sealed trait OrderClient
 
 sealed trait OrderStatus
 sealed case class Sent(dateSent: LocalDate, expectedDeliveryDate: LocalDate, o: Order) extends OrderStatus

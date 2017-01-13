@@ -6,7 +6,11 @@ lazy val `talktimerbackend` = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.7"
 
-libraryDependencies ++= Seq( jdbc , cache , ws   , specs2 % Test )
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core" % "0.6.1",
+  "io.circe" %% "circe-generic" % "0.6.1",
+  "io.circe" %% "circe-parser" % "0.6.1",
+  jdbc , cache , ws   , specs2 % Test )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
 
