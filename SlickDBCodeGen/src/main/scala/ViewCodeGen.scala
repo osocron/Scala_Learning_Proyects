@@ -28,6 +28,6 @@ object ViewCodeGen extends App {
   val path = getClass.getResource("").getPath
 
   Await.ready(
-    codegenFuture.map(_.writeToFile("slick.driver.MySQLDriver", path, "views")), 20 seconds)
+    codegenFuture.map(_.writeToFile("slick.driver.MySQLDriver", path, "views", "Views", "Views.scala")), 20 seconds)
 
 }

@@ -42,7 +42,7 @@ trait AccountServiceImp {
                      dateOfClose: Option[LocalDate] = None,
                      balance: Balance = Balance() )
 
-  object AccountService extends AccountService[Account, Amount, Balance] {
+  /*object AccountService extends AccountService[Account, Amount, Balance] {
 
     override def open(no: String, name: String, openDate: Option[LocalDate]): Try[Account] = {
       if (no.isEmpty || name.isEmpty)
@@ -70,7 +70,7 @@ trait AccountServiceImp {
 
     override def balance(account: Account): Try[Balance] = Success(account.balance)
 
-  }
+  }*/
 
 
 }
