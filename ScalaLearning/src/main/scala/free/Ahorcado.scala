@@ -138,7 +138,9 @@ object ConsoleInterpreter extends App with Program {
       else EstadoJuego(continua = true, ganaste = false)
     }
 
-    override def mostrarFin(b: Boolean): Id[Unit] = if (b) println("Felicidades! Ganaste!") else println("Hijoles, perdiste de nuevo!")
+    override def mostrarFin(b: Boolean): Id[Unit] =
+      if (b) println("Felicidades! Ganaste!")
+      else println("Hijoles, perdiste de nuevo!")
     
   }
 
