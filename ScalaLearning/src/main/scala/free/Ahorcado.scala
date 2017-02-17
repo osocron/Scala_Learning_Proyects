@@ -7,22 +7,32 @@ import freasymonad.cats.free
 import scala.io.StdIn
 
 case class Juego(fraseSecreta: FraseSecreta, tableroUsuario: TableroUsuario, muerto: Muerto)
+
 case class EstadoJuego(continua: Boolean, ganaste: Boolean)
+
 case class FraseSecreta(frase: String)
+
 case class TableroUsuario(tablero: String)
+
 case class Muerto(vidas: Int)
+
 case class Letra(letra: Char)
 
 
 @free trait Ahorcado {
 
   type AhorcadoF[A] = Free[ADT, A]
+
   sealed trait ADT[A]
 
   def generarMuerto(): AhorcadoF[Muerto]
+
   def mostrarMuerto(m: Muerto): AhorcadoF[Unit]
+
   def generarFraseSecreta(): AhorcadoF[FraseSecreta]
+
   def generarTableroUsuario(fraseSecreta: FraseSecreta): AhorcadoF[TableroUsuario]
+
   def mostrarTableroUsuario(tableroUsuario: TableroUsuario): AhorcadoF[Unit]
 
   def empezarJuego(): AhorcadoF[Juego] =
@@ -35,9 +45,12 @@ case class Letra(letra: Char)
     } yield Juego(frase, tableroUsuario, muerto)
 
   def pedirLetraAUsuario(): AhorcadoF[Letra]
+
   def hayCoincidencias(l: Letra, f: FraseSecreta): AhorcadoF[Boolean]
+
   def mostrarCoincidencias(l: Letra, f: FraseSecreta, t: TableroUsuario): AhorcadoF[TableroUsuario]
-  def matarAlMuerto(b: Boolean, m: Muerto): AhorcadoF[Muerto]
+
+  def matarAlMuerto(leAtino: Boolean, m: Muerto): AhorcadoF[Muerto]
 
   def ronda(fraseSecreta: FraseSecreta,
             tableroUsuario: TableroUsuario,
@@ -50,7 +63,8 @@ case class Letra(letra: Char)
     } yield Juego(fraseSecreta, tablero, masMuerto)
   }
 
-  def evaluarRonda(t: TableroUsuario, m: Muerto): AhorcadoF[EstadoJuego]
+  def evaluarRonda(t: TableroUsuario, m: Muerto, f: FraseSecreta): AhorcadoF[EstadoJuego]
+
   def mostrarFin(b: Boolean): AhorcadoF[Unit]
 }
 
@@ -63,16 +77,18 @@ trait Program {
             muerto: Muerto,
             continua: Boolean,
             ganaste: Boolean): AhorcadoF[Boolean] = {
-    if (!continua)
+    if (!continua) {
       for {
-        estado <- evaluarRonda(tableroUsuario, muerto)
+        estado <- evaluarRonda(tableroUsuario, muerto, fraseSecreta)
       } yield estado.ganaste
-    else
+    }
+    else {
       for {
         juego <- ronda(fraseSecreta, tableroUsuario, muerto)
-        estado <- evaluarRonda(juego.tableroUsuario, juego.muerto)
+        estado <- evaluarRonda(juego.tableroUsuario, juego.muerto, juego.fraseSecreta)
         ganaste <- jugar(juego.fraseSecreta, juego.tableroUsuario, juego.muerto, estado.continua, estado.ganaste)
       } yield ganaste
+    }
   }
 
   val program: AhorcadoF[Unit] =
@@ -94,17 +110,20 @@ object ConsoleInterpreter extends App with Program {
 
     override def mostrarMuerto(m: Muerto): Id[Unit] = println("\nVidas = " + m.vidas)
 
-    override def generarFraseSecreta(): Id[FraseSecreta] = FraseSecreta("EJEMPLO")
+    override def generarFraseSecreta(): Id[FraseSecreta] = FraseSecreta("EJEMPLO DE PRUEBA".toUpperCase)
 
     override def generarTableroUsuario(fraseSecreta: FraseSecreta): Id[TableroUsuario] =
-      TableroUsuario(fraseSecreta.frase.map(c => '_'))
+      TableroUsuario(fraseSecreta.frase.map(c => {
+        if (c.isWhitespace) ' '
+        else '_'
+      }))
 
     override def mostrarTableroUsuario(tableroUsuario: TableroUsuario): Id[Unit] =
-      println(s"Bienvenido! \n ${tableroUsuario.tablero}")
+      println(s"Bienvenido al mejor juego de Ahorcado! \n ${tableroUsuario.tablero}")
 
     override def pedirLetraAUsuario(): Id[Letra] = {
       println("\nAdivina una letra!")
-      Letra(StdIn.readLine().head)
+      Letra(StdIn.readLine().toUpperCase.head)
     }
 
     override def hayCoincidencias(l: Letra, f: FraseSecreta): Id[Boolean] = {
@@ -125,15 +144,21 @@ object ConsoleInterpreter extends App with Program {
       TableroUsuario(tablero)
     }
 
-    override def matarAlMuerto(b: Boolean, m: Muerto): Id[Muerto] = {
-      if (!b) {
+    override def matarAlMuerto(leAtino: Boolean, m: Muerto): Id[Muerto] = {
+      if (!leAtino) {
         println(s"\nTienes : ${m.vidas - 1} vidas!")
         Muerto(m.vidas - 1)
-      } else m
+      } else {
+        println(s"\nTienes : ${m.vidas} vidas!")
+        m
+      }
     }
 
-    override def evaluarRonda(t: TableroUsuario, m: Muerto): EstadoJuego = {
-      if (t.tablero.forall(c => c != '_')) EstadoJuego(continua = false, ganaste = true)
+    override def evaluarRonda(t: TableroUsuario, m: Muerto, f: FraseSecreta): EstadoJuego = {
+      val aciertosJugador = t.tablero.count(c => c != '_')
+      val aciertosJuego = f.frase.filterNot(c => c.isWhitespace).length
+      val restante = f.frase.length - aciertosJuego
+      if (aciertosJugador - restante == aciertosJuego) EstadoJuego(continua = false, ganaste = true)
       else if (m.vidas == 0) EstadoJuego(continua = false, ganaste = false)
       else EstadoJuego(continua = true, ganaste = false)
     }
@@ -141,7 +166,7 @@ object ConsoleInterpreter extends App with Program {
     override def mostrarFin(b: Boolean): Id[Unit] =
       if (b) println("Felicidades! Ganaste!")
       else println("Hijoles, perdiste de nuevo!")
-    
+
   }
 
   consoleInterpreter.run(program)
