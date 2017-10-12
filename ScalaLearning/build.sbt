@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
   "org.typelevel" %% "cats" % "0.9.0",
   "com.github.thangiee" %% "freasy-monad" % "0.5.0",
-  "com.chuusai" %% "shapeless" % "2.3.2")
+  "com.chuusai" %% "shapeless" % "2.3.2",
+  "joda-time" % "joda-time" % "2.9.9")
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
     
